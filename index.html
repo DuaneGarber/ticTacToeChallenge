@@ -1,0 +1,119 @@
+<html>
+<head>
+  <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js'></script>
+  <script type='text/javascript' src='index.js'></script>
+</head>
+<body>
+  <h1> Welcome To Simple Tic Tac Toe</h1>
+  <div id="board">
+    <div>
+      <span id="coord_00" data-coord="0,0" class="choice right bottom"></span>
+      <span id="coord_10" data-coord="1,0" class="choice right left bottom"></span>
+      <span id="coord_20" data-coord="2,0" class="choice left bottom"></span>
+    </div>
+    <div>
+      <span id="coord_01" data-coord="0,1" class="choice right top bottom"></span>
+      <span id="coord_11" data-coord="1,1" class="choice right left top bottom"></span>
+      <span id="coord_21" data-coord="2,1" class="choice left top bottom"></span>
+    </div>
+    <div>
+      <span id="coord_02" data-coord="0,2" class="choice right top"></span>
+      <span id="coord_12" data-coord="1,2" class="choice right left top"></span>
+      <span id="coord_22" data-coord="2,2" class="choice left top"></span>
+    </div>
+  </div>
+
+  <hr>
+
+  <div id="newGameContainer">
+    Click here to start a new game!   
+    <input type="button" id="newGame" value="New Game" />
+  </div>
+
+  <div id="resultMsg">
+
+  </div>
+  
+
+  <script type='text/javascript'>
+    var game = new Game();
+    var ai = new DumbAI();
+    ai.setGame(game);
+
+    $('.choice').click(function () {
+      var thisChoice = $(this);
+      var coordinates = thisChoice.data('coord').split(',');
+      var x = Number(coordinates[0]);
+      var y = Number(coordinates[1]);
+      var response = game.placePiece(x, y);
+
+      handleResponse(response, thisChoice);
+
+      var aiResponse = ai.takeTurn();
+      var target = $('#coord_' + aiResponse.x + aiResponse.y);
+      // target.text('O');
+      handleResponse(aiResponse, target);
+    });
+
+    function handleResponse (response, target) {
+      if (response.success) {
+        target.text(response.turn);
+      }
+
+      if (response.msg) {
+        $('#resultMsg').text(response.msg);
+      }
+    }
+
+    $('#newGame').click(function(){
+      game.resetBoard();
+      $('.choice').text('');
+      $('#resultMsg').text('GOOD LUCK!');
+    });
+  </script>
+</body>
+
+<style type="text/css">
+  #board {
+    width: 400px;
+  }
+
+  #newGameContainer {
+    margin: 25px 0;
+  }
+
+  #resultMsg {
+    font-weight: bold;
+  }
+
+  .choice {
+    display: inline-block;
+    width: 32%;
+    height: 75px;
+    line-height: 75px;
+    vertical-align: top;
+    text-align: center;
+    font-size: 3.5rem;
+  }
+
+  .bottom {
+    border-bottom: 1px solid black;
+  }
+
+  .left {
+    border-left: 1px solid black;
+  }
+
+  .right {
+    border-right: 1px solid black;
+  }
+
+  .top {
+    border-top: 1px solid black;
+  }
+
+
+</style>
+
+
+</html>
